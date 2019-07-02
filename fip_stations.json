@@ -1,0 +1,49 @@
+{
+  "stations": [{
+    "id": 7,
+    "name": "fip",
+    "mp3": "http://direct.fipradio.fr/live/fip-midfi.mp3",
+    "url": "https://www.fip.fr/livemeta/7"
+  }, {
+    "id": 65,
+    "name": "fip autour du jazz",
+    "mp3": "https://direct.fipradio.fr/live/fip-webradio2.mp3?ID=radiofrance",
+    "url": "https://www.fip.fr/livemeta/7"
+  }, {
+    "id": 66,
+    "name": "fip autour du groove",
+    "mp3": "https://direct.fipradio.fr/live/fip-webradio3.mp3?ID=radiofrance",
+    "url": "https://www.fip.fr/livemeta/66"
+  }, {
+    "id": 69,
+    "name": "fip autour du monde",
+    "mp3": "https://direct.fipradio.fr/live/fip-webradio4.mp3?ID=radiofrance",
+    "url": "https://www.fip.fr/livemeta/7"
+  }, {
+    "id": 70,
+    "name": "Tout nouveau, tout fip",
+    "mp3": "https://direct.fipradio.fr/live/fip-webradio5.mp3?ID=radiofrance",
+    "url": "https://www.fip.fr/livemeta/70"
+  }, {
+    "id": 71,
+    "name": "fip autour du reggae",
+    "mp3": "https://direct.fipradio.fr/live/fip-webradio6.mp3?ID=radiofrance",
+    "url": "https://www.fip.fr/livemeta/71"
+  }, {
+    "id": 64,
+    "name": "fip autour du rock",
+    "mp3": "https://direct.fipradio.fr/live/fip-webradio1.mp3?ID=radiofrance",
+    "url": "https://www.fip.fr/livemeta/64"
+  }, {
+    "id": 74,
+    "name": "fip autour de l'électro",
+    "mp3": "https://direct.fipradio.fr/live/fip-webradio8.mp3?ID=radiofrance",
+    "url": "https://www.fip.fr/livemeta/74"
+  }, {
+    "id": 77,
+    "name": "fip l'été Metal",
+    "mp3": "https://direct.fipradio.fr/live/fip-webradio7.mp3?ID=radiofrance",
+    "url": "https://www.fip.fr/livemeta/7"
+  }]
+}
+

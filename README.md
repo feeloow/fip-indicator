@@ -1,6 +1,6 @@
 # fip-indicator
-<p>Ubuntu indicator applet for fip Radio.</p>
-<p>Displays currently playing title on main fip station or selected fip webradio</p>
+<p>Ubuntu / Unity indicator applet for "Best radio in the world": fipradio.</p>
+<p>Displays currently playing track on main fip station or selected fip webradio</p>
 
 ![screenshot](https://raw.githubusercontent.com/feeloow/fip-indicator/master/screenshot.png "Indicator running in Unity")
 

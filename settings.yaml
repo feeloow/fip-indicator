@@ -1,0 +1,3 @@
+fip:
+    default_station: 7 # check fip_stations.json for stations ids
+    refresh_timeout: 120 # seconds between each fallback refresh

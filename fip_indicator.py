@@ -4,43 +4,31 @@ import os
 import signal
 import gi
 import urllib.request, json 
-import time
-import threading
+import time, threading
 import webbrowser
-import re
-import textwrap
-# import vlc
+import re, textwrap
+import sys
+import yaml
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('AppIndicator3', '0.1')
 from gi.repository import Gtk, AppIndicator3
 
-currpath = os.path.dirname(os.path.realpath(__file__))
-
-
-# Roadmap
-# If artist name is too long, cut after X chars /spaces
-# If title name is too long, cut after X chars /spaces
-# Show edition year 
-# Link to album infos
-# Disc Cover
-# Play Station locally
-# Launch Station on Alexa device
-# Submit to last.fm
-
 class fipIndicator():
     def __init__(self):
         self.app = 'fipIndicator'
-        #iconpath = currpath+"/fip_100_color.png"
         self.indicator = AppIndicator3.Indicator.new(
             self.app, os.path.abspath('fip_100_color.png'),
             AppIndicator3.IndicatorCategory.SYSTEM_SERVICES)
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
-        self.station = 7
+
+        with open(os.path.abspath('settings.yaml')) as settings_file:  
+            settings = yaml.load(settings_file)
+
+        self.station = settings['fip']['default_station']
         self.refresh_menu()
 
     def get_titles(self, data):
-        #sep = Gtk.SeparatorMenuItem()
         for step in data['steps']:
 
             author=data['steps'][step]['authors']
@@ -62,14 +50,18 @@ class fipIndicator():
             if data['steps'][step]['start'] <= time.time()  <= data['steps'][step]['end']:
                 self.indicator.set_label(' '+menustring+' ', self.app)
                 menustring = '-- '+menustring+' --'
-                # TODO : Show Cover
-            menuitem = Gtk.MenuItem(menustring)
+
+                self.t=threading.Timer(data['steps'][step]['end']-time.time(), self.refresh_menu)
+                self.t=threading.Timer(120, self.refresh_menu)
+                self.t.start()
+
+            menuitem = Gtk.MenuItem.new_with_label(menustring)
             if 'path' in data['steps'][step] and data['steps'][step]['path']:
                 menuitem.connect("activate", self.open_url, data['steps'][step]['path'])
             elif 'lienYoutube' in data['steps'][step] and data['steps'][step]['lienYoutube']:
                 menuitem.connect("activate", self.open_url, data['steps'][step]['lienYoutube'])
+                
             self.menu.append(menuitem)
-
 
     def create_menu(self, data):
         self.menu = Gtk.Menu()
@@ -77,26 +69,26 @@ class fipIndicator():
 
         sep = Gtk.SeparatorMenuItem()
 
-        item_fip = Gtk.MenuItem('www.fip.fr')
+        item_fip = Gtk.MenuItem.new_with_label('www.fip.fr')
         self.menu.append(sep)
         item_fip.connect("activate", self.open_url, 'https://www.fip.fr/')
         self.menu.append(item_fip)
 
-        item_stations = Gtk.MenuItem('Stations')
+        item_stations = Gtk.MenuItem.new_with_label('Stations')
         self.menu.append(item_stations)
         sub_menu = Gtk.Menu()
 
         # Stations submenu
-        with open(currpath+'/fip_stations.json') as json_file:  
-            data = json.load(json_file)
-            for s in data['stations']:
-                station_menu = Gtk.MenuItem(s['name'])
-                station_menu.connect("activate", self.set_station, s)
+        with open(os.path.abspath('fip_stations.yaml')) as stations_file:  
+            data = yaml.load(stations_file)
+            for station in data['stations']:
+                station_menu = Gtk.MenuItem.new_with_label(station['name'])
+                station_menu.connect("activate", self.set_station, station)
                 sub_menu.append(station_menu)
 
         item_stations.set_submenu(sub_menu)
 
-        item_quit = Gtk.MenuItem('Quit')
+        item_quit = Gtk.MenuItem.new_with_label('Quit')
         item_quit.connect('activate', self.on_quit)
         self.menu.append(item_quit)
 
@@ -104,7 +96,6 @@ class fipIndicator():
         return self.menu
 
     def refresh_menu(self):
-        threading.Timer(20.0, self.refresh_menu).start()
         with urllib.request.urlopen("https://www.fip.fr/livemeta/"+str(self.station)) as url:
             data = json.loads(url.read().decode())
         self.indicator.set_menu(self.create_menu(data))
@@ -117,6 +108,7 @@ class fipIndicator():
         self.refresh_menu()
 
     def on_quit(self, source):
+        self.t.cancel()
         Gtk.main_quit()
         
 fipIndicator()

@@ -1,9 +1,11 @@
 fip:
-    default_station: 7 # check fip_stations.json for stations ids
+  default_station: 7
 indicator:
-    refresh_timeout: 120 # seconds between each fallback refresh
-#ui:
-#    color_icon: true
-#    artist_max_length: 35 
-#    track_max_length: 35
-#    display_edition_year: false
+  refresh_timeout: 120
+spotify:
+  use: true
+  user_name: 
+  user_token: 
+  client_id: ffe193071be8425e98050c4a7b36ab31
+  client_secret: 86064d1ce9d24c30940fdb42c67aa808
+  redirect_uri: https://github.com/feeloow/fip-indicator

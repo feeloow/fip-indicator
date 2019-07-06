@@ -9,6 +9,8 @@ import webbrowser
 import re, textwrap
 import sys
 import yaml
+import spotipy
+import spotipy.util as util
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('AppIndicator3', '0.1')
@@ -24,6 +26,9 @@ class fipIndicator():
 
         with open(os.path.abspath('settings.yaml')) as settings_file:  
             self.settings = yaml.load(settings_file)
+
+        self.token = self.settings['spotify']['user_token']
+        self.currentTrack = False
 
         self.station = self.settings['fip']['default_station']
         self.refresh_menu()
@@ -48,6 +53,7 @@ class fipIndicator():
                 menustring = menustring.title()
 
             if data['steps'][step]['start'] <= time.time()  <= data['steps'][step]['end']:
+                self.currentTrack = data['steps'][step]['authors']+' '+data['steps'][step]['title']
                 self.indicator.set_label(' '+menustring+' ', self.app)
                 menustring = '-- '+menustring+' --'
 
@@ -88,6 +94,20 @@ class fipIndicator():
 
         item_stations.set_submenu(sub_menu)
 
+        item_spotify = Gtk.MenuItem.new_with_label('Spotify')
+        self.menu.append(item_spotify)
+        sub_menu = Gtk.Menu()
+        if self.token and self.currentTrack:
+            spotify_menu = Gtk.MenuItem.new_with_label('Save current track')
+            spotify_menu.connect("activate", self.spotify_save, self.currentTrack)
+            sub_menu.append(spotify_menu)
+            item_spotify.set_submenu(sub_menu)
+        else:
+            spotify_menu = Gtk.MenuItem.new_with_label('Connect your spotify account')
+            spotify_menu.connect("activate", self.spotify_connect)
+            sub_menu.append(spotify_menu)
+            item_spotify.set_submenu(sub_menu)
+
         item_quit = Gtk.MenuItem.new_with_label('Quit')
         item_quit.connect('activate', self.on_quit)
         self.menu.append(item_quit)
@@ -106,6 +126,30 @@ class fipIndicator():
     def set_station(self, widget, station):
         self.station = station["id"];
         self.refresh_menu()
+
+    def spotify_connect(self, widget):
+        scope = 'user-library-modify'
+        self.token = util.prompt_for_user_token(
+            self.settings['spotify']['user_name'], scope,
+            self.settings['spotify']['client_id'], self.settings['spotify']['client_secret'],
+            self.settings['spotify']['redirect_uri'])
+        if self.token:
+            self.settings['spotify']['user_token'] = self.token
+            with open(os.path.abspath('settings.yaml'), 'w') as outfile:
+                yaml.dump(self.settings, outfile, default_flow_style=False)
+
+            self.refresh_menu()
+        else:
+            print( "Can't get token for", self.settings['spotify']['user_name'])
+
+    def spotify_search(self, track):
+        sp = spotipy.Spotify(auth=self.token)
+        results = sp.search(track)
+        return results['tracks']['items'][0]['id']
+
+    def spotify_save(self, widget, track_name):
+        track_id = self.spotify_search(track_name)
+        sp = spotipy.Spotify(auth=self.token)
 
     def on_quit(self, source):
         self.t.cancel()

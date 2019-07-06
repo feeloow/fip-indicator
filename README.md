@@ -9,11 +9,12 @@
 - [ ] Quit menu not working 
 
 ## Roadmap / Wish List
+- [ ] Setup script
 - [ ] Show edition year 
 - [ ] Link to album infos
 - [ ] Display Disc Cover
-- [ ] Search on Spotify
-- [ ] Add on Spotify
+- [x] Search on Spotify
+- [x] Add on Spotify
 - [ ] Play Station locally
 - [ ] Launch Station on Alexa device
-- [ ] Submit to last.fm
+- [ ] Track on last.fm

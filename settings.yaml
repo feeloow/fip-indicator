@@ -1,3 +1,9 @@
 fip:
     default_station: 7 # check fip_stations.json for stations ids
+indicator:
     refresh_timeout: 120 # seconds between each fallback refresh
+#ui:
+#    color_icon: true
+#    artist_max_length: 35 
+#    track_max_length: 35
+#    display_edition_year: false

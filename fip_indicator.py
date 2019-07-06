@@ -23,9 +23,9 @@ class fipIndicator():
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
 
         with open(os.path.abspath('settings.yaml')) as settings_file:  
-            settings = yaml.load(settings_file)
+            self.settings = yaml.load(settings_file)
 
-        self.station = settings['fip']['default_station']
+        self.station = self.settings['fip']['default_station']
         self.refresh_menu()
 
     def get_titles(self, data):
@@ -52,7 +52,7 @@ class fipIndicator():
                 menustring = '-- '+menustring+' --'
 
                 self.t=threading.Timer(data['steps'][step]['end']-time.time(), self.refresh_menu)
-                self.t=threading.Timer(120, self.refresh_menu)
+                self.t=threading.Timer(self.settings['indicator']['refresh_timeout'], self.refresh_menu)
                 self.t.start()
 
             menuitem = Gtk.MenuItem.new_with_label(menustring)

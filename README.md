@@ -6,11 +6,15 @@
 
 ## Installation
 
-`git clone https://github.com/feeloow/fip-indicator`
-`pip3 install -r requirements.txt`
-`nano settings.yaml`
-`python3 fip_indicator.py`
-`connect spotify through menu`
+```bash
+git clone https://github.com/feeloow/fip-indicator
+pip3 install -r requirements.txt
+python3 fip_indicator.py
+```
+## Configuration
+
+* Set your spotify user name in [settings.yaml](https://github.com/feeloow/fip-indicator/blob/master/settings.yaml)
+* Connect spotify through menu
 
 
 ## Known bugs
